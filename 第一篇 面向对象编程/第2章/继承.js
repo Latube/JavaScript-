@@ -217,5 +217,86 @@ instance2.getTime(); //2013
 
 
 /**
- * 多继承
+ * extend方法实现单继承（属性浅复制）
  */
+var extend = function (target, source) {
+  // 遍历源对象中的属性
+  for (property in source) {
+    // 属性复制
+    target[property] = source[property];
+  }
+  //返回目标对象
+  return target;
+}
+
+//测试用例
+var book = {
+  name: "js book",
+  alikeBook: ["css book", "html book"]
+};
+var anotherBook = {
+  color: "blue"
+}
+extend(anotherBook, book);
+console.log(anotherBook.name) //js book
+console.log(anotherBook.alikeBook);  //["css book", "html book"]
+
+anotherBook.alikeBook.push("ajax book");
+anotherBook.name = "设计模式";
+console.log(anotherBook.name); //设计模式
+console.log(anotherBook.alikeBook); //["css book", "html book", "ajax book"]
+console.log(book.name); //js book
+console.log(book.alikeBook); //["css book", "html book", "ajax book"]
+
+
+
+
+/**
+ * mix()实现多继承,并将mix()绑定到Object中
+ */
+
+Object.prototype.mix = function () {
+  var i = 0,
+    len = arguments.length,
+    arg;
+  //遍历被继承的对象
+  for (; i < len; i++) {
+    //缓存当前对象
+    arg = arguments[i];
+    //遍历被继承对象中的属性
+    for (property in arg) {
+      //将被继承对象中的属性复制到目标对象中
+      this[property] = arg[property];
+    }
+  }
+};
+
+//测试用例
+otherBook = {};
+otherBook.mix(book, anotherBook);
+console.log(otherBook); //{name: "js book", alikeBook: Array(2), mix: ƒ, color: "blue"}
+
+
+
+
+/**
+ * 多态：JS是根据对传入函数参数个数进行判断，然后返回不同的值或函数
+ */
+function add() {
+  var arg = arguments,
+    len = arg.length;
+
+  switch (len) {
+    case 0:
+      return 10;
+    case 1:
+      return 10 + arg[0];
+    case 2:
+      return arg[0] + arg[1];
+  }
+}
+
+//测试用例
+console.log(add()); //10
+console.log(add(5)); //15
+console.log(add(6, 7)); //13
